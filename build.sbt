@@ -1,0 +1,41 @@
+name := "PiJvmPoc"
+organization := "tech.navicore"
+
+version := "0.1.0"
+
+scalaVersion := "2.12.4"
+val akkaVersion = "2.5.6"
+val circeVersion = "0.9.3"
+
+libraryDependencies ++= Seq(
+
+  "ch.qos.logback" % "logback-classic" % "1.1.7",
+  "com.typesafe" % "config" % "1.3.1",
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0",
+
+  "com.softwaremill.sttp" %% "core" % "1.2.0-RC1",
+
+  "io.circe" %% "circe-core" % circeVersion,
+  "io.circe" %% "circe-generic" % circeVersion,
+  "io.circe" %% "circe-parser" % circeVersion,
+
+  "com.typesafe.akka" %% "akka-actor" % akkaVersion,
+  "com.typesafe.akka" %% "akka-stream" % akkaVersion,
+
+  "org.bidib.com.pi4j" % "pi4j-core" % "1.2.M1",
+  "com.sandinh" %% "paho-akka" % "1.5.0",
+
+  "org.scalatest" %% "scalatest" % "3.0.1" % "test"
+
+)
+
+mainClass in assembly := Some("onextent.iot.pijvmpoc.Main")
+assemblyJarName in assembly := "PiJvmPoc.jar"
+
+assemblyMergeStrategy in assembly := {
+  case PathList("reference.conf") => MergeStrategy.concat
+  case x if x.endsWith("io.netty.versions.properties") => MergeStrategy.first
+  case PathList("META-INF", _ @ _*) => MergeStrategy.discard
+  case _ => MergeStrategy.first
+}
+
