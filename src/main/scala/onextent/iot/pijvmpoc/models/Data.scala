@@ -6,7 +6,7 @@ case class TempReading(humidity: Option[Double] = None,
                        isValid: Option[Boolean] = None,
                        errors: Option[Int] = None)
 
-case class TempReport(DevAddr: Option[String] = Some("unknown"), decoded_payload: TempReading)
+case class TempReport(DevAddr: Option[String] = Some("unknown"), data: TempReading)
 
 case class Error()
 
