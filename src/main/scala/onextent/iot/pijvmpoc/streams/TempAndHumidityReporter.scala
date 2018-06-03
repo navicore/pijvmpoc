@@ -28,7 +28,7 @@ object TempAndHumidityReporter {
       mode = ThrottleMode.Shaping
     )
     val s1 = Source.fromGraph(new Dht22SensorSource(4)).via(throttlingFlow)
-    val s2 = Source.fromGraph(new Dht22SensorSource(23)).via(throttlingFlow)
+    val s2 = Source.fromGraph(new Dht22SensorSource(22)).via(throttlingFlow)
 
     Source
       .combine(s1, s2)(Merge(_))

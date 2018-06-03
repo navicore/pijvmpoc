@@ -10,11 +10,11 @@ object Dht22Sensor {
 
     val dht22 = new Dht22
 
-    val reading = dht22.get(4)
+    val reading = dht22.get(pin)
 
     if (reading(0) > 0) {
-      TempReading(Some(reading(0).toDouble),
-                  Some(reading(2).toDouble),
+      TempReading(Some(reading(2).toDouble),
+                  Some(reading(0).toDouble),
                   None,
                   None)
     } else {
