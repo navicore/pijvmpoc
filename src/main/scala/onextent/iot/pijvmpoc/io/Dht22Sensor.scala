@@ -6,16 +6,16 @@ import onextent.iot.pijvmpoc.models.TempReading
 
 object Dht22Sensor {
 
-  def apply(pin: Int): TempReading = {
+  def apply(pin: Int): Option[TempReading] = {
 
     val dht22 = new Dht22
 
     val reading = dht22.get(pin)
 
-    if (reading(0) > 0) {
-      TempReading(Some(reading(2).toDouble), Some(reading(0).toDouble))
+    if (reading(0) > 0 && reading(2) > 0) {
+      Some(TempReading(Some(reading(2).toDouble), Some(reading(0).toDouble)))
     } else {
-      TempReading()
+      None
     }
 
   }

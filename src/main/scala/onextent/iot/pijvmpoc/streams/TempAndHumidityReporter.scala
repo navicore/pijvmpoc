@@ -20,7 +20,7 @@ object TempAndHumidityReporter {
 
   def apply(): Unit = {
 
-    val throttlingFlow = Flow[(Int, TempReading)].throttle(
+    val throttlingFlow = Flow[(Int, Option[TempReading])].throttle(
       elements = 1,
       per = 30.seconds,
       maximumBurst = 0,
@@ -33,17 +33,21 @@ object TempAndHumidityReporter {
       .combine(s1, s2)(Merge(_))
       .runForeach(t => {
 
-        val report = TempReport(Some(s"navisensor-${t._1}"), t._2)
+        t._2 match {
 
-        if (report.data.humidity.nonEmpty && report.data.temperature.nonEmpty) {
+          case Some(reading) =>
+            val report = TempReport(Some(s"navisensor-${t._1}"), reading)
 
-          println(s"from sensor ${t._1}")
-          println(report.asJson.spaces2)
+            println("")
+            println(s"from sensor ${t._1}")
+            println(report.asJson.spaces2)
 
-          client(report.asJson.spaces2.getBytes("UTF8")) match {
-            case Right(code) => println(s"http code: $code")
-            case Left(error) => println(s"http error: $error")
-          }
+            client(report.asJson.spaces2.getBytes("UTF8")) match {
+              case Right(code) => println(s"http code: $code\n")
+              case Left(error) => println(s"http error: $error\n")
+            }
+
+          case _ =>
         }
 
       })

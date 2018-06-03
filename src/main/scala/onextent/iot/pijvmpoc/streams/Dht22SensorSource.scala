@@ -8,11 +8,11 @@ import onextent.iot.pijvmpoc.io.Dht22Sensor
 import onextent.iot.pijvmpoc.models.TempReading
 
 class Dht22SensorSource(pin: Int)(implicit system: ActorSystem)
-    extends GraphStage[SourceShape[(Int,TempReading)]] {
+    extends GraphStage[SourceShape[(Int,Option[TempReading])]] {
 
-  val out: Outlet[(Int, TempReading)] = Outlet("NdtReadingSource")
+  val out: Outlet[(Int, Option[TempReading])] = Outlet("NdtReadingSource")
 
-  override val shape: SourceShape[(Int, TempReading)] = SourceShape(out)
+  override val shape: SourceShape[(Int, Option[TempReading])] = SourceShape(out)
 
   override def createLogic(inheritedAttributes: Attributes): GraphStageLogic =
     new GraphStageLogic(shape) {
