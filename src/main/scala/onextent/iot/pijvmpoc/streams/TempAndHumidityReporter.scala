@@ -38,10 +38,11 @@ object TempAndHumidityReporter {
         val report = TempReport(Some(s"navisensor-${t._1}"), t._2)
         println(report.asJson.spaces2)
 
-        client(report.asJson.spaces2.getBytes("UTF8")) match {
-          case Right(code) => println(s"http code: $code")
-          case Left(error) => println(s"http error: $error")
-        }
+        if (report.data.humidity.nonEmpty && report.data.temperature.nonEmpty)
+          client(report.asJson.spaces2.getBytes("UTF8")) match {
+            case Right(code) => println(s"http code: $code")
+            case Left(error) => println(s"http error: $error")
+          }
 
       })
 
