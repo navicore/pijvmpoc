@@ -22,8 +22,7 @@ object TempAndHumidityReporter {
 
     val throttlingFlow = Flow[(Int, TempReading)].throttle(
       elements = 1,
-      //per = 1.minute,
-      per = 5.seconds,
+      per = 30.seconds,
       maximumBurst = 0,
       mode = ThrottleMode.Shaping
     )
