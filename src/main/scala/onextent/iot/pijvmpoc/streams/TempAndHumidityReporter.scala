@@ -47,6 +47,7 @@ object TempAndHumidityReporter {
 
     def httpsSink: Sink[MqttMessage, Future[Done]] =
       Sink.foreach(t => {
+        println(s"httpSink sending to ${t.topic}")
         client(t.payload.toArray) match {
           case Right(code) => println(s"http code: $code\n")
           case Left(error) => println(s"http error: $error\n")
