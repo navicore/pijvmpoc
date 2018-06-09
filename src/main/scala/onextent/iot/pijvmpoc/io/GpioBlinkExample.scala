@@ -6,17 +6,23 @@ object GpioBlinkExample {
 
   def apply(): Unit = {
 
+    println("blink demo starting")
+
+    GpioFactory.setDefaultProvider(new RaspiGpioProvider(RaspiPinNumberingScheme.BROADCOM_PIN_NUMBERING))
+
     val gpio: GpioController = GpioFactory.getInstance()
 
     val pin: Pin = RaspiPin.GPIO_16
 
-    val pwm = gpio.provisionDigitalOutputPin(pin)
+    val led = gpio.provisionDigitalOutputPin(pin)
 
-    pwm.blink(200)
+    led.blink(1000)
 
     Thread.sleep(1000 * 10)
 
+    led.setState(false)
     gpio.shutdown()
+    println("blink demo complete")
 
   }
 }
