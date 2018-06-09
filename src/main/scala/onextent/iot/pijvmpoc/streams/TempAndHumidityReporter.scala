@@ -1,10 +1,11 @@
 package onextent.iot.pijvmpoc.streams
 
 import akka.Done
-import akka.stream.ThrottleMode
+import akka.event.Logging
 import akka.stream.alpakka.mqtt.scaladsl.MqttSink
 import akka.stream.alpakka.mqtt.{MqttConnectionSettings, MqttMessage, MqttQoS}
-import akka.stream.scaladsl.{Flow, Keep, Merge, Sink, Source}
+import akka.stream.scaladsl.{Flow, Merge, Sink, Source}
+import akka.stream.{ActorAttributes, ThrottleMode}
 import akka.util.ByteString
 import io.circe.generic.auto._
 import io.circe.syntax._
@@ -80,6 +81,9 @@ object TempAndHumidityReporter {
       //.alsoTo(mqttSink)
       .to(httpsSink)
       //.to(mqttSink)
+      .withAttributes(ActorAttributes.createLogLevels(Logging.InfoLevel(),
+                                                      Logging.InfoLevel(),
+                                                      Logging.ErrorLevel()))
       .run()
 
   }
