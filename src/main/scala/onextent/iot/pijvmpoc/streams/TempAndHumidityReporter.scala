@@ -79,11 +79,11 @@ object TempAndHumidityReporter {
       .log("stream log")
       //.alsoTo(httpsSink)
       //.alsoTo(mqttSink)
-      .to(httpsSink)
-      //.to(mqttSink)
-      .withAttributes(ActorAttributes.createLogLevels(Logging.InfoLevel(),
-                                                      Logging.InfoLevel(),
-                                                      Logging.ErrorLevel()))
+      //.to(httpsSink)
+      .to(mqttSink)
+      .withAttributes(ActorAttributes.createLogLevels(Logging.InfoLevel,
+                                                      Logging.InfoLevel,
+                                                      Logging.ErrorLevel))
       .run()
 
   }
