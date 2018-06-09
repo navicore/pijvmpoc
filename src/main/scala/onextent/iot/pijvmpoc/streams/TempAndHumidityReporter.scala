@@ -4,7 +4,7 @@ import akka.Done
 import akka.stream.ThrottleMode
 import akka.stream.alpakka.mqtt.scaladsl.MqttSink
 import akka.stream.alpakka.mqtt.{MqttConnectionSettings, MqttMessage, MqttQoS}
-import akka.stream.scaladsl.{Flow, Merge, Sink, Source}
+import akka.stream.scaladsl.{Flow, Keep, Merge, Sink, Source}
 import akka.util.ByteString
 import io.circe.generic.auto._
 import io.circe.syntax._
@@ -76,7 +76,8 @@ object TempAndHumidityReporter {
       .mapConcat(tempReadings())
       .map(mqttReading())
       .alsoTo(httpsSink)
-      .to(mqttSink)
+      .alsoTo(mqttSink)
+      .to(Sink.foreach(t => println(s"ejs got msg for ${t.topic}")))
       .run()
 
   }
