@@ -21,9 +21,7 @@ libraryDependencies ++= Seq(
 
   "com.typesafe.akka" %% "akka-actor" % akkaVersion,
   "com.typesafe.akka" %% "akka-stream" % akkaVersion,
-
-  "org.bidib.com.pi4j" % "pi4j-core" % "1.2.M1",
-  "com.sandinh" %% "paho-akka" % "1.5.0",
+  "com.lightbend.akka" %% "akka-stream-alpakka-mqtt" % "0.19",
 
   "org.bidib.com.pi4j" % "pi4j-core" % "1.2.M1",
 

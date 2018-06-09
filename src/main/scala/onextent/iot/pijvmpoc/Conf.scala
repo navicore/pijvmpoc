@@ -39,5 +39,10 @@ object Conf extends LazyLogging {
 
   val baseUrl: String = conf.getString("main.baseUrl")
 
+  val mqttUrl: String = conf.getString("mqtt.url")
+  val mqttUser: String = conf.getString("mqtt.user")
+  val mqttPwd: String = conf.getString("mqtt.pwd")
+  val mqttTopic: String = conf.getString("mqtt.topic")
+
 }
 
