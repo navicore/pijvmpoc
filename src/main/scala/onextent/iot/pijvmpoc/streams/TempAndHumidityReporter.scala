@@ -1,12 +1,12 @@
 package onextent.iot.pijvmpoc.streams
 
 import akka.Done
-import akka.event.Logging
+import akka.stream.ThrottleMode
 import akka.stream.alpakka.mqtt.scaladsl.MqttSink
 import akka.stream.alpakka.mqtt.{MqttConnectionSettings, MqttMessage, MqttQoS}
 import akka.stream.scaladsl.{Flow, Merge, Sink, Source}
-import akka.stream.{ActorAttributes, ThrottleMode}
 import akka.util.ByteString
+import com.typesafe.scalalogging.LazyLogging
 import io.circe.generic.auto._
 import io.circe.syntax._
 import onextent.iot.pijvmpoc.Conf._
@@ -21,7 +21,7 @@ import scala.concurrent.duration._
   * Akka Stream whose source is a temp and humidity module on a PI
   * and whose Sink reports to an https API
   */
-object TempAndHumidityReporter {
+object TempAndHumidityReporter extends LazyLogging {
 
   val client = HttpReport(authString, baseUrl)
 
@@ -48,10 +48,10 @@ object TempAndHumidityReporter {
 
     def httpsSink: Sink[MqttMessage, Future[Done]] =
       Sink.foreach(t => {
-        println(s"httpSink sending to ${t.topic}")
+        logger.debug(s"httpSink sending to ${t.topic}")
         client(t.payload.toArray) match {
-          case Right(code) => println(s"http code: $code\n")
-          case Left(error) => println(s"http error: $error\n")
+          case Right(code) => logger.debug(s"http code: $code\n")
+          case Left(error) => logger.warn(s"http error: $error\n")
         }
       })
 
