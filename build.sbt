@@ -3,14 +3,14 @@ organization := "tech.navicore"
 
 version := "0.1.0"
 
-scalaVersion := "2.12.4"
-val akkaVersion = "2.5.6"
+scalaVersion := "2.12.6"
+val akkaVersion = "2.5.13"
 val circeVersion = "0.9.3"
 
 libraryDependencies ++= Seq(
 
   "ch.qos.logback" % "logback-classic" % "1.1.7",
-  "com.typesafe" % "config" % "1.3.1",
+  "com.typesafe" % "config" % "1.3.3",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0",
 
   "com.softwaremill.sttp" %% "core" % "1.2.0-RC1",

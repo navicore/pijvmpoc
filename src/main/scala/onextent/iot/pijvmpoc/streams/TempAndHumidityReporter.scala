@@ -75,9 +75,11 @@ object TempAndHumidityReporter {
       .combine(s1, s2)(Merge(_))
       .mapConcat(tempReadings())
       .map(mqttReading())
-      .alsoTo(httpsSink)
-      .alsoTo(mqttSink)
-      .to(Sink.foreach(t => println(s"ejs got msg for ${t.topic}")))
+      .log("stream log")
+      //.alsoTo(httpsSink)
+      //.alsoTo(mqttSink)
+      .to(httpsSink)
+      //.to(mqttSink)
       .run()
 
   }
