@@ -25,6 +25,8 @@ libraryDependencies ++= Seq(
   "org.bidib.com.pi4j" % "pi4j-core" % "1.2.M1",
   "com.sandinh" %% "paho-akka" % "1.5.0",
 
+  "org.bidib.com.pi4j" % "pi4j-core" % "1.2.M1",
+
   "org.scalatest" %% "scalatest" % "3.0.1" % "test"
 
 )
