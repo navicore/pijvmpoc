@@ -41,7 +41,7 @@ object TempAndHumidityReporter {
     val connectionSettings =
       MqttConnectionSettings(
         mqttUrl,
-        "test-client",
+        "test-iot-client",
         new MemoryPersistence
       ).withAuth(mqttUser, mqttPwd)
     val mqttSink = MqttSink(connectionSettings, MqttQoS.AtLeastOnce)
@@ -76,14 +76,11 @@ object TempAndHumidityReporter {
       .combine(s1, s2)(Merge(_))
       .mapConcat(tempReadings())
       .map(mqttReading())
-      .log("stream log")
+      //.log("stream log")
       //.alsoTo(httpsSink)
       //.alsoTo(mqttSink)
-      //.to(httpsSink)
-      .to(mqttSink)
-      .withAttributes(ActorAttributes.createLogLevels(Logging.InfoLevel,
-                                                      Logging.InfoLevel,
-                                                      Logging.ErrorLevel))
+      .to(httpsSink)
+      //.to(mqttSink)
       .run()
 
   }
