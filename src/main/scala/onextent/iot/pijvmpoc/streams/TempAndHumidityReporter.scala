@@ -1,7 +1,8 @@
 package onextent.iot.pijvmpoc.streams
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import akka.{Done, NotUsed}
-import akka.stream.ThrottleMode
+import akka.stream._
 import akka.stream.alpakka.mqtt.scaladsl.MqttSink
 import akka.stream.alpakka.mqtt.{MqttConnectionSettings, MqttMessage, MqttQoS}
 import akka.stream.scaladsl.{Flow, Merge, Sink, Source}
@@ -70,22 +71,16 @@ object TempAndHumidityReporter extends LazyLogging {
       }
 
     def mqttReading() =
-      (r: TempReport) => MqttMessage(mqttTopic, ByteString(r.asJson.noSpaces))
-      //MqttMessage(mqttTopic, ByteString(r.asJson.noSpaces), Some(MqttQoS.AtLeastOnce), retained = true)
+      (r: TempReport) => MqttMessage(mqttTopic, ByteString(r.asJson.noSpaces), Some(MqttQoS.AtLeastOnce), retained = true)
 
-    val r: Future[Done] = Source
+    val done: Future[Done] = Source
       .combine(s1, s2)(Merge(_))
       .mapConcat(tempReadings())
       .map(mqttReading())
-      //.log("stream log")
       .alsoTo(httpsSink)
-      //.alsoTo(mqttSink)
-      //.to(httpsSink)
-      //.to(mqttSink)
-      //.run()
       .runWith(mqttSink)
 
-    r onComplete {
+    done onComplete {
       case Success(s) => logger.debug(s"stream got $s")
       case Failure(e) => logger.error(s"stream got $e")
     }
