@@ -1,6 +1,6 @@
 package onextent.iot.pijvmpoc.streams
 
-import akka.Done
+import akka.{Done, NotUsed}
 import akka.stream.ThrottleMode
 import akka.stream.alpakka.mqtt.scaladsl.MqttSink
 import akka.stream.alpakka.mqtt.{MqttConnectionSettings, MqttMessage, MqttQoS}
@@ -16,6 +16,7 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
+import scala.util.{Failure, Success}
 
 /**
   * Akka Stream whose source is a temp and humidity module on a PI
@@ -44,8 +45,10 @@ object TempAndHumidityReporter extends LazyLogging {
         "test-iot-client",
         new MemoryPersistence
       ).withAuth(mqttUser, mqttPwd)
-    //val mqttSink = MqttSink(connectionSettings, MqttQoS.AtLeastOnce)
-    val mqttSink = MqttSink(connectionSettings, MqttQoS.AtMostOnce)
+
+    val sinkSettings = connectionSettings.withClientId(clientId = "sink-spec/sink")
+
+    val mqttSink = MqttSink(sinkSettings, MqttQoS.atLeastOnce)
 
     def httpsSink: Sink[MqttMessage, Future[Done]] =
       Sink.foreach(t => {
@@ -67,22 +70,25 @@ object TempAndHumidityReporter extends LazyLogging {
       }
 
     def mqttReading() =
-      (r: TempReport) =>
-        MqttMessage(mqttTopic,
-                    ByteString(r.asJson.noSpaces),
-                    Some(MqttQoS.AtLeastOnce),
-                    retained = true)
+      (r: TempReport) => MqttMessage(mqttTopic, ByteString(r.asJson.noSpaces))
+      //MqttMessage(mqttTopic, ByteString(r.asJson.noSpaces), Some(MqttQoS.AtLeastOnce), retained = true)
 
-    Source
+    val r: Future[Done] = Source
       .combine(s1, s2)(Merge(_))
       .mapConcat(tempReadings())
       .map(mqttReading())
       //.log("stream log")
-      //.alsoTo(httpsSink)
+      .alsoTo(httpsSink)
       //.alsoTo(mqttSink)
-      .to(httpsSink)
+      //.to(httpsSink)
       //.to(mqttSink)
-      .run()
+      //.run()
+      .runWith(mqttSink)
+
+    r onComplete {
+      case Success(s) => logger.debug(s"stream got $s")
+      case Failure(e) => logger.error(s"stream got $e")
+    }
 
   }
 
