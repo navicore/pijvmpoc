@@ -44,7 +44,8 @@ object TempAndHumidityReporter extends LazyLogging {
         "test-iot-client",
         new MemoryPersistence
       ).withAuth(mqttUser, mqttPwd)
-    val mqttSink = MqttSink(connectionSettings, MqttQoS.AtLeastOnce)
+    //val mqttSink = MqttSink(connectionSettings, MqttQoS.AtLeastOnce)
+    val mqttSink = MqttSink(connectionSettings, MqttQoS.AtMostOnce)
 
     def httpsSink: Sink[MqttMessage, Future[Done]] =
       Sink.foreach(t => {
