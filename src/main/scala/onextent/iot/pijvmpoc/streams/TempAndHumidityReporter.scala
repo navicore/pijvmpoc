@@ -76,11 +76,11 @@ object TempAndHumidityReporter extends LazyLogging {
       .combine(s1, s2)(Merge(_))
       .mapConcat(tempReadings())
       .map(mqttReading())
-      //.log("stream log")
+      .log("stream log")
       //.alsoTo(httpsSink)
       //.alsoTo(mqttSink)
-      .to(httpsSink)
-      //.to(mqttSink)
+      //.to(httpsSink)
+      .to(mqttSink)
       .run()
 
   }
