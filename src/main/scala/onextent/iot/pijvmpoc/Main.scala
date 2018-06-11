@@ -1,6 +1,6 @@
 package onextent.iot.pijvmpoc
 
-import onextent.iot.pijvmpoc.io.GpioBlinkExample
+import onextent.iot.pijvmpoc.io._
 import onextent.iot.pijvmpoc.streams.TempAndHumidityReporter
 
 object Main {
@@ -10,6 +10,8 @@ object Main {
     println("starting...")
 
     GpioBlinkExample()
+
+    PwmLedExample()
 
     TempAndHumidityReporter()
 
