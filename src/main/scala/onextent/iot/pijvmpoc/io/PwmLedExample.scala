@@ -8,11 +8,12 @@ object PwmLedExample {
 
     println("pwm demo starting")
 
-    GpioFactory.setDefaultProvider(new RaspiGpioProvider(RaspiPinNumberingScheme.BROADCOM_PIN_NUMBERING))
+    //GpioFactory.setDefaultProvider(new RaspiGpioProvider(RaspiPinNumberingScheme.BROADCOM_PIN_NUMBERING))
 
     val gpio: GpioController = GpioFactory.getInstance()
 
-    val pin: Pin = RaspiPin.GPIO_18
+    //val pin: Pin = RaspiPin.GPIO_18
+    val pin: Pin = RaspiPin.GPIO_12
 
     val pwm = gpio.provisionPwmOutputPin(pin)
 
