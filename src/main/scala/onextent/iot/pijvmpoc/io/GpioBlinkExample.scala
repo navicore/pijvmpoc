@@ -12,7 +12,8 @@ object GpioBlinkExample {
 
     val gpio: GpioController = GpioFactory.getInstance()
 
-    val pin: Pin = RaspiPin.GPIO_16
+    //val pin: Pin = RaspiPin.GPIO_16
+    val pin: Pin = RaspiBcmPin.GPIO_16
 
     val led = gpio.provisionDigitalOutputPin(pin)
 

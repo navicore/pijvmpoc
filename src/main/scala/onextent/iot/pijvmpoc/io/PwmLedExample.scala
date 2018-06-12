@@ -12,24 +12,25 @@ object PwmLedExample {
 
     val gpio: GpioController = GpioFactory.getInstance()
 
-    //val pin: Pin = RaspiPin.GPIO_18
     val pin: Pin = RaspiBcmPin.GPIO_18
-    //val pin: Pin = RaspiPin.GPIO_12
 
     val pwm = gpio.provisionPwmOutputPin(pin)
+    
+    pwm.setPwmRange(100)
 
     pwm.setPwm(0)
 
     for (i <- 1 to 100) {
-      pwm.setPwmRange(i)
+      pwm.setPwm(i)
       Thread.sleep(10)
     }
 
-    for (i <- 100 to 1) {
-      pwm.setPwmRange(i)
+    for (i <- 100 to 1 by -1) {
+      pwm.setPwm(i)
       Thread.sleep(10)
     }
 
+    pwm.setPwm(0)
     gpio.shutdown()
     println("pwm demo complete")
 
